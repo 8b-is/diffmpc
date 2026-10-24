@@ -47,11 +47,11 @@ def predict_next_state(
         next_state: prediction for the next state
             (_num_state_variables, ) array
     """
-    # if discretization_scheme == DiscretizationScheme.EULER:
-    state_next = state + dt * dynamics.state_dot(
-        state, control, dynamics_state_dot_params
-    )
-    if discretization_scheme == DiscretizationScheme.MIDPOINT:
+    if discretization_scheme == DiscretizationScheme.EULER:
+        state_next = state + dt * dynamics.state_dot(
+            state, control, dynamics_state_dot_params
+        )
+    elif discretization_scheme == DiscretizationScheme.MIDPOINT:
         state_mid = state + 0.5 * dt * dynamics.state_dot(
             state, control, dynamics_state_dot_params
         )
@@ -68,6 +68,8 @@ def predict_next_state(
         )
         k4 = dynamics.state_dot(state + dt * k3, control, dynamics_state_dot_params)
         state_next = state + (1.0 / 6.0) * (k1 + 2 * k2 + 2 * k3 + k4) * dt
+    else:
+        raise ValueError(f"Unsupported discretization_scheme: {discretization_scheme}")
     return state_next
 
 
@@ -105,16 +107,20 @@ def get_state_trajectory(
             (horizon+1, _num_state_variables, ) array
     """
 
+    num_substeps = max(int(discretization_num_substeps), 1)
+    sub_dt = dt / float(num_substeps)
+
     def next_state_scan(state, everything):
-        state_next = predict_next_state(
-            dynamics,
-            dt,
-            discretization_scheme,
-            discretization_num_substeps,
-            everything["dynamics_state_dot_params"],
-            state,
-            everything["control"],
-        )
+        state_next = state
+        for _ in range(num_substeps):
+            state_next = predict_next_state(
+                dynamics,
+                sub_dt,
+                discretization_scheme,
+                everything["dynamics_state_dot_params"],
+                state_next,
+                everything["control"],
+            )
         return state_next, state_next
 
     everythings = {

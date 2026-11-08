@@ -121,7 +121,7 @@ tensorboard_plugin_profile==2.19.7
 tensorboardX==2.6.2.2
 tensorstore==0.1.75
 toolz==1.0.0
-torch==2.8.0
+torch==2.12.1+cpu
 tornado==6.6
 tqdm==4.67.1
 traitlets==5.14.3

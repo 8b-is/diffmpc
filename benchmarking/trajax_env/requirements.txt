@@ -81,7 +81,7 @@ multidict==6.4.4
 nest-asyncio==1.6.0
 networkx==3.4.2
 numpy==1.26.4
-oauthlib==3.2.2
+oauthlib==4.0.1
 opt_einsum==3.4.0
 optax==0.1.5
 orbax-checkpoint==0.1.1

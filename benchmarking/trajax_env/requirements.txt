@@ -36,7 +36,7 @@ flask-cors==6.0.0
 flax==0.6.9
 fonttools==4.58.1
 frozenlist==1.6.0
-fsspec==2025.5.1
+fsspec==2026.6.0
 gcsfs==2025.5.1
 glfw==2.9.0
 google-api-core==2.24.2
